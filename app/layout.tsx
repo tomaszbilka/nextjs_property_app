@@ -1,4 +1,5 @@
 import "@/assets/styles/globals.css";
+import Navbar from "@/components/Navbar";
 
 import type { Metadata } from "next";
 
@@ -16,6 +17,7 @@ const MainLayout = ({ children }: TProps) => {
   return (
     <html>
       <body>
+        <Navbar />
         <main>{children}</main>
       </body>
     </html>
