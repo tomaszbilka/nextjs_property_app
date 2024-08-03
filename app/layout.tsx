@@ -1,4 +1,5 @@
 import "@/assets/styles/globals.css";
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
 import type { Metadata } from "next";
@@ -19,6 +20,7 @@ const MainLayout = ({ children }: TProps) => {
       <body>
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
