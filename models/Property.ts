@@ -1,6 +1,41 @@
-import { Schema, model, models } from "mongoose";
+import { FlattenMaps, Schema, Types, model, models } from "mongoose";
 
-const PropertySchema = new Schema(
+interface IProperty {
+  owner: Types.ObjectId;
+  name: string;
+  type: string;
+  description?: string;
+  location: {
+    street: string;
+    city: string;
+    state: string;
+    zipcode: string;
+  };
+  beds: number;
+  baths: number;
+  square_feet: number;
+  amenities: string[];
+  rates: {
+    nightly: number;
+    weekly: number;
+    monthly: number;
+  };
+  seller_info: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  images: string[];
+  is_featured: boolean;
+}
+
+export type TProperty = FlattenMaps<IProperty> & {
+  _id: Types.ObjectId;
+};
+
+export type TProperties = TProperty[];
+
+const PropertySchema = new Schema<IProperty>(
   {
     owner: {
       type: Schema.Types.ObjectId,
@@ -56,16 +91,17 @@ const PropertySchema = new Schema(
         type: String,
       },
     ],
-    is_featured:{
-        type: Boolean,
-        default: false
-    }
+    is_featured: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Property = models.Property || model("Property", PropertySchema);
+const Property =
+  models.Property || model<IProperty>("Property", PropertySchema);
 
 export default Property;

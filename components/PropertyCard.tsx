@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,7 +11,7 @@ import {
 
 type TProps = {
   property: {
-    _id: string;
+    _id: Types.ObjectId;
     baths: number;
     beds: number;
     images: string[];
