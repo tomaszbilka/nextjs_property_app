@@ -3,6 +3,7 @@ import { useState } from "react";
 import { TProperties } from "@/models/Property";
 import Image from "next/image";
 import Link from "next/link";
+import deleteProperty from "@/app/actions/deleteProperty";
 
 type TProps = {
   initialProperties: TProperties;
@@ -10,6 +11,24 @@ type TProps = {
 
 const ProfileProperties = ({ initialProperties }: TProps) => {
   const [properties, setProperties] = useState<TProperties>(initialProperties);
+
+  const handleDeleteProperty = async (propertyId: string) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this proerty?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    await deleteProperty(propertyId);
+
+    const updatesProperties = properties.filter(
+      (property) => property._id.toString() !== propertyId
+    );
+
+    setProperties(updatesProperties);
+  };
 
   if (properties.length === 0) {
     return <div className="text-gray-400">No properties yet...</div>;
@@ -43,6 +62,7 @@ const ProfileProperties = ({ initialProperties }: TProps) => {
         <button
           className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
           type="button"
+          onClick={() => handleDeleteProperty(property._id.toString())}
         >
           Delete
         </button>
