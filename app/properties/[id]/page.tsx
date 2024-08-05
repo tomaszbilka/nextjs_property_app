@@ -4,6 +4,7 @@ import Link from "next/link";
 import Property, { TProperty } from "@/models/Property";
 import PropertyDetails from "@/components/PropertyDetails";
 import PropertyHeaderImage from "@/components/PropertyHeaderImage";
+import PropertyImages from "@/components/PropertyImages";
 
 type TProps = {
   params: {
@@ -35,6 +36,7 @@ const PropertyPage = async ({ params }: TProps) => {
           </div>
         </div>
       </section>
+      <PropertyImages images={property.images} />
     </>
   );
 };

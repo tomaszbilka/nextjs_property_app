@@ -1,9 +1,10 @@
 "use server";
+import { getSessionUser } from "@/utils/getSessionUser";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import cloudinary from "@/config/cloudinary";
 import connectDB from "@/config/database";
 import Property from "@/models/Property";
-import { getSessionUser } from "@/utils/getSessionUser";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 async function addProperty(formData: FormData) {
   await connectDB();
@@ -18,9 +19,7 @@ async function addProperty(formData: FormData) {
   // access all values from amenities and images
   const amenities = formData.getAll("amenities");
   const imagesObject = formData.getAll("images") as { name?: string }[];
-  const images = imagesObject
-    .filter((image) => image.name !== "")
-    .map((image) => image.name);
+  const images = imagesObject.filter((image) => image.name !== "");
 
   const propertyData = {
     owner: userId,
@@ -47,8 +46,32 @@ async function addProperty(formData: FormData) {
       email: formData.get("seller_info.email"),
       phone: formData.get("seller_info.phone"),
     },
-    images,
+    images: [""],
   };
+
+  const imagesUrls = [];
+
+  for (const imageFile of images) {
+    //@ts-expect-error JS create an aray of bits
+    const imageBuffer = await imageFile.arrayBuffer();
+    // JS create array of bajts
+    const imageArray = Array.from(new Uint8Array(imageBuffer));
+    // Node create buffer object to represent a fixed-length sequence of bytes
+    const imageData = Buffer.from(imageArray);
+
+    //converte to base64
+    const imageBase64 = imageData.toString("base64");
+
+    //make request to cloudinary
+    const result = await cloudinary.uploader.upload(
+      `data:image/png;base64,${imageBase64}`,
+      { folder: "properties" }
+    );
+
+    imagesUrls.push(result.secure_url);
+  }
+
+  propertyData.images = imagesUrls;
 
   const newProperty = new Property(propertyData);
   await newProperty.save();
