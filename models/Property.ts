@@ -1,6 +1,6 @@
 import { FlattenMaps, Schema, Types, model, models } from "mongoose";
 
-interface IProperty {
+export interface IProperty {
   owner: Types.ObjectId;
   name: string;
   type: string;
