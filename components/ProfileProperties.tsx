@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { TProperties } from "@/models/Property";
+import deleteProperty from "@/app/actions/deleteProperty";
 import Image from "next/image";
 import Link from "next/link";
-import deleteProperty from "@/app/actions/deleteProperty";
 
 type TProps = {
   initialProperties: TProperties;
@@ -28,6 +29,8 @@ const ProfileProperties = ({ initialProperties }: TProps) => {
     );
 
     setProperties(updatesProperties);
+
+    toast.success("Property Deleted Successfully!");
   };
 
   if (properties.length === 0) {
