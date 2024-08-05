@@ -5,6 +5,7 @@ import Property, { TProperty } from "@/models/Property";
 import PropertyDetails from "@/components/PropertyDetails";
 import PropertyHeaderImage from "@/components/PropertyHeaderImage";
 import PropertyImages from "@/components/PropertyImages";
+import { convertToSerializableObject } from "@/utils/convertToObject";
 
 type TProps = {
   params: {
@@ -14,7 +15,17 @@ type TProps = {
 
 const PropertyPage = async ({ params }: TProps) => {
   await connectDB();
-  const property = (await Property.findById(params.id).lean()) as TProperty;
+  const propertyDoc = (await Property.findById(params.id).lean()) as TProperty;
+
+  const property = convertToSerializableObject(propertyDoc);
+
+  if (!property) {
+    return (
+      <h1 className="text-center text-2xl fond-bold mt-10">
+        Property not found
+      </h1>
+    );
+  }
 
   return (
     <>

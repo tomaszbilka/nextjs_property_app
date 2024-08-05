@@ -19,6 +19,8 @@ export type TAuthSession = {
     user: {
       id?: string;
       email: string;
+      image: string;
+      name: string;
     };
   };
 };
